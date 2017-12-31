@@ -20,9 +20,27 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "mann"
 	app.Usage = "your personal man pages"
+	app.UsageText = "mann [command] os-command [command options]"
+	app.Version = "0.2.0"
+	app.Authors = []cli.Author{
+		{
+			Name:  "Pat Migliaccio",
+			Email: "pat@patmigliaccio.com",
+		},
+	}
 
 	if _, err := os.Stat(filepath); os.IsNotExist(err) {
 		os.MkdirAll(filepath, 0777)
+	}
+
+	app.Commands = []cli.Command{
+		{
+			Name:      "add",
+			Aliases:   []string{"a"},
+			Usage:     "stores a new custom command",
+			Action:    AddCommand,
+			ArgsUsage: `command [options]`,
+		},
 	}
 
 	app.Action = ActionHandler
@@ -34,14 +52,7 @@ func main() {
 func ActionHandler(c *cli.Context) error {
 	if c.NArg() > 0 {
 		args := c.Args()
-
-		switch action := args[0]; action {
-		case "add":
-			AddCommand(args)
-		default:
-			GetCommands(args[0])
-		}
-
+		GetCommands(args[0])
 	}
 
 	return nil
@@ -74,10 +85,14 @@ func GetCommands(command string) {
 	fmt.Println(cmdOut)
 }
 
-// AddCommand stores a new custom command to the list
-func AddCommand(args cli.Args) {
+// AddCommand stores a new custom command
+func AddCommand(c *cli.Context) error {
+	args := c.Args()
+
+	fmt.Println(args)
+
 	customCommand := ""
-	for i := 1; i < len(args); i++ {
+	for i := 0; i < len(args); i++ {
 		customCommand += fmt.Sprintf("%s ", args[i])
 	}
 
@@ -102,11 +117,13 @@ func AddCommand(args cli.Args) {
 	}
 
 	fmt.Println("Added: " + customCommand)
+
+	return nil
 }
 
 // ParseCommandName returns the command name from cli arguments
 func ParseCommandName(args cli.Args) string {
-	for i := 1; i < len(args); i++ {
+	for i := 0; i < len(args); i++ {
 		arg := ParseOutCommandPrefix(args[i], "sudo")
 		if arg != "" {
 			return arg
