@@ -76,11 +76,11 @@ func AddCommand(args cli.Args) {
 		customCommand += fmt.Sprintf("%s ", args[i])
 	}
 
-	filename := filepath + strings.Fields(args[1])[0] + ".yaml"
-	customCommandOut := fmt.Sprintf("\r\n  - %s", customCommand)
+	filename := filepath + ParseCommandName(args) + ".yaml"
+	customCommandOut := fmt.Sprintf("  - %s\r\n", customCommand)
 
 	if _, err := os.Stat(filename); os.IsNotExist(err) {
-		if err := ioutil.WriteFile(filename, []byte("cmds:"), 0644); err != nil {
+		if err := ioutil.WriteFile(filename, []byte("cmds:\r\n"), 0644); err != nil {
 			log.Fatal(err)
 		}
 	}
@@ -97,6 +97,36 @@ func AddCommand(args cli.Args) {
 	}
 
 	fmt.Println("Added: " + customCommand)
+}
+
+// ParseCommandName returns the command name from cli arguments
+func ParseCommandName(args cli.Args) string {
+	for i := 1; i < len(args); i++ {
+		arg := ParseCommandArgs(args[i])
+		if arg != "" {
+			return arg
+		}
+	}
+
+	log.Fatal("Unable to parse arguments.")
+
+	return ""
+}
+
+// ParseCommandArgs recursively strips `sudo` and returns the first argument
+func ParseCommandArgs(arg string) string {
+	prefix := "sudo"
+
+	if strings.TrimSpace(arg) == prefix {
+		return ""
+	}
+
+	prefixIndex := strings.Index(arg, prefix)
+	if prefixIndex > -1 {
+		return ParseCommandArgs(arg[prefixIndex+len(prefix)+1:])
+	}
+
+	return strings.Fields(arg)[0]
 }
 
 // UserHomeDir returns the home directory of the user cross platform
