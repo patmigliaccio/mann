@@ -25,21 +25,26 @@ func main() {
 		os.MkdirAll(filepath, 0777)
 	}
 
-	app.Action = func(c *cli.Context) error {
-		if c.NArg() > 0 {
-			args := c.Args()
-			if args[0] != "add" {
-				GetCommands(args[0])
-			} else {
-				AddCommand(args)
-			}
-
-		}
-
-		return nil
-	}
+	app.Action = ActionHandler
 
 	app.Run(os.Args)
+}
+
+// ActionHandler routes arguments to the appropriate methods
+func ActionHandler(c *cli.Context) error {
+	if c.NArg() > 0 {
+		args := c.Args()
+
+		switch action := args[0]; action {
+		case "add":
+			AddCommand(args)
+		default:
+			GetCommands(args[0])
+		}
+
+	}
+
+	return nil
 }
 
 // GetCommands retrieves the list of commands
@@ -102,7 +107,7 @@ func AddCommand(args cli.Args) {
 // ParseCommandName returns the command name from cli arguments
 func ParseCommandName(args cli.Args) string {
 	for i := 1; i < len(args); i++ {
-		arg := ParseCommandArgs(args[i])
+		arg := ParseOutCommandPrefix(args[i], "sudo")
 		if arg != "" {
 			return arg
 		}
@@ -113,17 +118,16 @@ func ParseCommandName(args cli.Args) string {
 	return ""
 }
 
-// ParseCommandArgs recursively strips `sudo` and returns the first argument
-func ParseCommandArgs(arg string) string {
-	prefix := "sudo"
-
+// ParseOutCommandPrefix recursively strips a prefix
+// if it exists (e.g. `sudo`) and returns the first argument
+func ParseOutCommandPrefix(arg string, prefix string) string {
 	if strings.TrimSpace(arg) == prefix {
 		return ""
 	}
 
 	prefixIndex := strings.Index(arg, prefix)
 	if prefixIndex > -1 {
-		return ParseCommandArgs(arg[prefixIndex+len(prefix)+1:])
+		return ParseOutCommandPrefix(arg[prefixIndex+len(prefix)+1:], prefix)
 	}
 
 	return strings.Fields(arg)[0]
