@@ -6,7 +6,7 @@ A command-line interface tool for storing customized commands and descriptions.
 ### Install
 
 ```bash
-$ go install github.com/patmigliaccio/mann
+$ go get github.com/patmigliaccio/mann
 ```
 
 ### Usage
