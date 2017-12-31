@@ -36,7 +36,7 @@ $ mann add service --status-all
 Using quotes allows for the addition of more complex commands such as pipes.
 
 ```bash
-$ mann add service "service --status-all | grep -E 'httpd'"
+$ mann add "service --status-all | grep -E 'httpd'"
 
 # Added: service --status-all | grep -E 'httpd'
 ```
