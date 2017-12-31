@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"runtime"
 	"strings"
 
 	"github.com/kylelemons/go-gypsy/yaml"
@@ -12,7 +13,7 @@ import (
 )
 
 var (
-	filepath = "cmds/"
+	filepath = UserHomeDir() + `/.mann/`
 )
 
 func main() {
@@ -96,4 +97,16 @@ func AddCommand(args cli.Args) {
 	}
 
 	fmt.Println("Added: " + customCommand)
+}
+
+// UserHomeDir returns the home directory of the user cross platform
+func UserHomeDir() string {
+	if runtime.GOOS == "windows" {
+		home := os.Getenv("HOMEDRIVE") + os.Getenv("HOMEPATH")
+		if home == "" {
+			home = os.Getenv("USERPROFILE")
+		}
+		return home
+	}
+	return os.Getenv("HOME")
 }
