@@ -89,8 +89,6 @@ func GetCommands(command string) {
 func AddCommand(c *cli.Context) error {
 	args := c.Args()
 
-	fmt.Println(args)
-
 	customCommand := ""
 	for i := 0; i < len(args); i++ {
 		customCommand += fmt.Sprintf("%s ", args[i])
