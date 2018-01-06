@@ -53,7 +53,7 @@ func ParseCommandName(args cli.Args) string {
 		}
 	}
 
-	log.Fatal("Unable to parse arguments.")
+	log.Fatalf("Unable to parse arguments: %s \r\n", args)
 
 	return ""
 }
