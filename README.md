@@ -1,7 +1,7 @@
 # mann
 ## Your personal man pages
 
-A command-line interface tool for storing customized commands and descriptions.
+A command-line interface tool for storing and running customized commands.
 
 ### Install
 
@@ -19,13 +19,14 @@ $ mann service
 #   Name: service
 #
 #   Commands:
-#        service --status-all
-#        service --status-all | grep -E 'httpd'
+#   1.      service --status-all
+#   2.      service --status-all | grep -E 'httpd|vsftpd'
 ```
 
 
 #### Add
 
+Store
 
 ```bash
 $ mann add service --status-all
@@ -36,7 +37,19 @@ $ mann add service --status-all
 Using quotes allows for the addition of more complex commands such as pipes.
 
 ```bash
-$ mann add "service --status-all | grep -E 'httpd'"
+$ mann add "service --status-all | grep -E 'httpd|vsftpd'"
 
-# Added: service --status-all | grep -E 'httpd'
+# Added: service --status-all | grep -E 'httpd|vsftpd'
+```
+
+#### Run
+
+Execute a command by passing the list item number. 
+
+```bash
+$ mann run service 1
+
+# service --status-all | grep -E 'httpd|vsftpd'
+# httpd (pid  2301) is running...
+# vsftpd (pid 14070 2061) is running...
 ```
