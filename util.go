@@ -22,7 +22,7 @@ func CheckArgsLen(c *cli.Context, min int, max int) {
 			fmt.Printf("%v too little arguments specified.", min-argCount)
 		}
 
-		fmt.Printf(" Use '--help' for more information.\r\n")
+		fmt.Printf(" Use 'mann --help' for more information.\r\n")
 
 		os.Exit(1)
 	}

@@ -4,7 +4,11 @@ import (
 	"github.com/urfave/cli"
 )
 
-var commands = []cli.Command{
+// Commands is the list of actionable predicates
+type Commands []cli.Command
+
+// AppCommands is the list of commands for the app
+var AppCommands Commands = []cli.Command{
 	{
 		Name:         "add",
 		Aliases:      []string{"a"},

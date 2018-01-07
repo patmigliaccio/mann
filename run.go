@@ -21,22 +21,28 @@ func Run(c *cli.Context) error {
 		log.Fatalf("%v is not a valid integer.", k)
 	}
 
-	cmd := GetCustomCommand(args[0], int(k))
+	cmd, err := GetCustomCommand(args[0], int(k))
+	if err != nil {
+		log.Fatalln(err)
+	}
 
 	fmt.Println(cmd)
 
-	ExecCommand(cmd)
+	err = ExecCommand(cmd)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
 	return nil
 }
 
 // ExecCommand runs the specified command in the shell
-func ExecCommand(cmdString string) {
+func ExecCommand(cmdString string) error {
 	cmd := exec.Command("sh", "-c", cmdString)
 
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
-	cmd.Run()
+	return cmd.Run()
 }

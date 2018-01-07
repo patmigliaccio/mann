@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/kylelemons/go-gypsy/yaml"
@@ -30,6 +29,7 @@ func Get(command string) {
 // GetCommands retrieves the list of commands
 func GetCommands(command string) ([]string, error) {
 	var cmds []string
+	var err error
 
 	filename := filepath + command + ".yaml"
 
@@ -47,24 +47,30 @@ func GetCommands(command string) ([]string, error) {
 		return nil, fmt.Errorf("%q: %s", filename, err)
 	}
 
-	for _, cmd := range node.(yaml.List) {
-		cmdString := fmt.Sprintf("%s", cmd.(yaml.Scalar))
+	var cmdString string
+	for i, cmd := range node.(yaml.List) {
+		if cmd != nil {
+			cmdString = fmt.Sprintf("%s", cmd.(yaml.Scalar))
+		} else {
+			cmdString, err = "", fmt.Errorf("Parsing error: command is empty at %v", i+1)
+		}
+
 		cmds = append(cmds, cmdString)
 	}
 
-	return cmds, nil
+	return cmds, err
 }
 
 // GetCustomCommand returns the command by list position
-func GetCustomCommand(cmd string, k int) string {
+func GetCustomCommand(cmd string, k int) (string, error) {
 	cmds, err := GetCommands(cmd)
 	if err != nil {
-		log.Fatal(err)
+		return "", err
 	}
 
 	if len(cmds) < k || k < 1 {
-		log.Fatalf("%v is not a valid position.", k)
+		return "", fmt.Errorf("%v is not a valid position", k)
 	}
 
-	return cmds[k-1]
+	return cmds[k-1], nil
 }

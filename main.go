@@ -31,7 +31,7 @@ func main() {
 		}
 	}
 
-	app.Commands = commands
+	app.Commands = AppCommands
 	app.Action = ActionHandler
 
 	app.Run(os.Args)
@@ -39,10 +39,8 @@ func main() {
 
 // ActionHandler routes arguments to the appropriate methods
 func ActionHandler(c *cli.Context) error {
-	if c.NArg() > 0 {
-		args := c.Args()
-		Get(args[0])
-	}
+	CheckArgsLen(c, 1, 1)
+	Get(c.Args()[0])
 
 	return nil
 }
