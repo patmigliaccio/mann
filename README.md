@@ -26,7 +26,7 @@ $ mann service
 
 #### Add
 
-Store
+Store a command including any flags and predicates for reuse later.
 
 ```bash
 $ mann add service --status-all
@@ -47,7 +47,7 @@ $ mann add "service --status-all | grep -E 'httpd|vsftpd'"
 Execute a command by passing the list item number. 
 
 ```bash
-$ mann run service 1
+$ mann run service 2
 
 # service --status-all | grep -E 'httpd|vsftpd'
 # httpd (pid  2301) is running...
