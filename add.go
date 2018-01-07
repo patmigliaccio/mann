@@ -44,6 +44,24 @@ func Add(c *cli.Context) error {
 	return nil
 }
 
+// OnUsageErrorAdd converts arguments into a quoted string if necessary
+func OnUsageErrorAdd(c *cli.Context, err error, isSubcommand bool) error {
+	argsQuote := ""
+	for _, cmd := range os.Args[2:] {
+		argsQuote += fmt.Sprintf("%s ", cmd)
+	}
+
+	os.Args = []string{
+		os.Args[0],
+		os.Args[1],
+		strings.TrimSpace(argsQuote),
+	}
+
+	c.App.Run(os.Args)
+
+	return nil
+}
+
 // ParseCommandName returns the command name from cli arguments
 func ParseCommandName(args cli.Args) string {
 	for i := 0; i < len(args); i++ {

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 	"runtime"
 
@@ -15,8 +16,8 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "mann"
 	app.Usage = "your personal man pages"
-	app.UsageText = "mann [command] os-command [command options]"
-	app.Version = "0.3.0"
+	app.UsageText = "mann [command|osCommand] [osCommand] [options]"
+	app.Version = "0.3.1"
 	app.Authors = []cli.Author{
 		{
 			Name:  "Pat Migliaccio",
@@ -25,7 +26,9 @@ func main() {
 	}
 
 	if _, err := os.Stat(filepath); os.IsNotExist(err) {
-		os.MkdirAll(filepath, 0777)
+		if err := os.MkdirAll(filepath, 0777); err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	app.Commands = commands

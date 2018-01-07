@@ -6,11 +6,12 @@ import (
 
 var commands = []cli.Command{
 	{
-		Name:      "add",
-		Aliases:   []string{"a"},
-		Usage:     "stores a new custom command",
-		Action:    Add,
-		ArgsUsage: `command [options]`,
+		Name:         "add",
+		Aliases:      []string{"a"},
+		Usage:        "stores a new custom command",
+		Action:       Add,
+		ArgsUsage:    `command [options]`,
+		OnUsageError: OnUsageErrorAdd,
 	},
 	{
 		Name:      "run",
