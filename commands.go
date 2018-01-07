@@ -12,4 +12,11 @@ var commands = []cli.Command{
 		Action:    Add,
 		ArgsUsage: `command [options]`,
 	},
+	{
+		Name:      "run",
+		Aliases:   []string{"r"},
+		Usage:     "runs a specified command by position",
+		Action:    Run,
+		ArgsUsage: `command listItemPosition [options]`,
+	},
 }
