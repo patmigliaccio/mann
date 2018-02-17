@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 	"os"
-	"runtime"
 
+	"github.com/mitchellh/go-homedir"
 	"github.com/urfave/cli"
 )
 
@@ -47,12 +47,14 @@ func ActionHandler(c *cli.Context) error {
 
 // UserHomeDir returns the home directory of the user cross platform
 func UserHomeDir() string {
-	if runtime.GOOS == "windows" {
-		home := os.Getenv("HOMEDRIVE") + os.Getenv("HOMEPATH")
-		if home == "" {
-			home = os.Getenv("USERPROFILE")
-		}
-		return home
+	var (
+		dir string
+		err error
+	)
+
+	if dir, err = homedir.Dir(); err != nil {
+		log.Fatal(err)
 	}
-	return os.Getenv("HOME")
+
+	return dir
 }
